@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f5ef">
+    <title>PetShelterHub | A home for every heart</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="/" aria-label="PetShelterHub home"><span
+                class="brand-mark">P</span><span>PetShelterHub<small>Pet care, together</small></span></a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="#pets">Find a friend</a>
+            <a href="#support">Get involved</a>
+            <a class="nav-account" href="login.html">Sign in</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow"><span class="eyebrow-dot"></span> GOOD DAYS START WITH A PAW</p>
+                <h1>A little love<br>changes <em>everything.</em></h1>
+                <p class="hero-text">Meet the animals waiting for a place to call home. Your next best friend might be
+                    right here.</p>
+                <a class="button button-dark" href="#pets">Meet the pets <span aria-hidden="true">↘</span></a>
+                <div class="hero-note"><span class="note-line"></span><span>Rescue. Rehome. Repeat.</span></div>
+            </div>
+            <div class="hero-image-wrap">
+                <img class="hero-image"
+                    src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=1300&q=90"
+                    alt="A happy dog looking up" fetchpriority="high">
+                <div class="image-caption"><span>Every tail has a story.<br><strong>Help write the next
+                            chapter.</strong></span></div>
+                <span class="image-index">01 / 03</span>
+            </div>
+            <div class="hero-side-label">A SHELTER BUILT ON SECOND CHANCES</div>
+        </section>
+
+        <section class="pets-section section-shell" id="pets">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">THEY'RE READY WHEN YOU ARE</p>
+                    <h2>Find your <em>kindred spirit.</em></h2>
+                </div>
+                <p class="section-intro">Each of these lovely souls is cared for, known, and ready to meet you.</p>
+            </div>
+            <div class="pet-grid" id="pet-list" aria-live="polite">
+                <p class="loading-state">A moment while we meet our residents...</p>
+            </div>
+        </section>
+
+        <section class="support-section" id="support">
+            <div class="section-shell">
+                <div class="section-heading support-heading">
+                    <div>
+                        <p class="eyebrow">KINDNESS HAS MANY FORMS</p>
+                        <h2>Be part of <em>their story.</em></h2>
+                    </div>
+                    <p class="section-intro">A small act can make a very big difference in an animal's day.</p>
+                </div>
+                <div class="forms-grid">
+                    <form class="form-panel" id="adoption-form" data-endpoint="/adoptions">
+                        <div class="form-heading"><span class="form-number">01</span>
+                            <div>
+                                <h3>Adoption request</h3>
+                                <p>Tell us who caught your eye.</p>
+                            </div>
+                        </div>
+                        <label for="adoption-pet">I'm interested in</label>
+                        <select id="adoption-pet" name="petId" required>
+                            <option value="">Choose a friend</option>
+                        </select>
+                        <label for="adoption-name">Your name</label><input id="adoption-name" name="name"
+                            autocomplete="name" required>
+                        <label for="adoption-email">Email</label><input id="adoption-email" name="email" type="email"
+                            autocomplete="email" required>
+                        <label for="adoption-phone">Phone</label><input id="adoption-phone" name="phone" type="tel"
+                            autocomplete="tel" required>
+                        <label for="adoption-message">A little about your home <span
+                                class="optional">Optional</span></label>
+                        <textarea id="adoption-message" name="message" rows="3"
+                            placeholder="Anything you'd like us to know?"></textarea>
+                        <button class="button button-dark form-submit" type="submit">Send request <span
+                                aria-hidden="true">→</span></button>
+                        <p class="form-status" aria-live="polite"></p>
+                    </form>
+
+                    <form class="form-panel form-panel-accent" id="donation-form" data-endpoint="/donations">
+                        <div class="form-heading"><span class="form-number">02</span>
+                            <div>
+                                <h3>Make a donation</h3>
+                                <p>Help with food, care, and safe beds.</p>
+                            </div>
+                        </div>
+                        <label for="donation-name">Your name</label><input id="donation-name" name="name"
+                            autocomplete="name" required>
+                        <label for="donation-email">Email</label><input id="donation-email" name="email" type="email"
+                            autocomplete="email" required>
+                        <label for="donation-amount">Donation amount</label>
+                        <div class="amount-field"><span aria-hidden="true">$</span><input id="donation-amount"
+                                name="amount" type="number" min="1" step="0.01" placeholder="25" required></div>
+                        <label for="donation-message">A note for the team <span class="optional">Optional</span></label>
+                        <textarea id="donation-message" name="message" rows="3"
+                            placeholder="Leave a kind note"></textarea>
+                        <p class="form-footnote">This records a donation pledge; online payment is not enabled.</p>
+                        <button class="button button-coral form-submit" type="submit">Pledge support <span
+                                aria-hidden="true">→</span></button>
+                        <p class="form-status" aria-live="polite"></p>
+                    </form>
+
+                    <form class="form-panel" id="volunteer-form" data-endpoint="/volunteers">
+                        <div class="form-heading"><span class="form-number">03</span>
+                            <div>
+                                <h3>Volunteer with us</h3>
+                                <p>Bring your time, skills, or just yourself.</p>
+                            </div>
+                        </div>
+                        <label for="volunteer-name">Your name</label><input id="volunteer-name" name="name"
+                            autocomplete="name" required>
+                        <label for="volunteer-email">Email</label><input id="volunteer-email" name="email" type="email"
+                            autocomplete="email" required>
+                        <label for="volunteer-phone">Phone</label><input id="volunteer-phone" name="phone" type="tel"
+                            autocomplete="tel" required>
+                        <label for="volunteer-availability">When are you usually free?</label>
+                        <select id="volunteer-availability" name="availability" required>
+                            <option value="">Choose availability</option>
+                            <option>Weekday mornings</option>
+                            <option>Weekday afternoons</option>
+                            <option>Weekends</option>
+                            <option>Flexible</option>
+                        </select>
+                        <label for="volunteer-interests">What would you enjoy helping with? <span
+                                class="optional">Optional</span></label>
+                        <textarea id="volunteer-interests" name="interests" rows="3"
+                            placeholder="Walking, fostering, events..."></textarea>
+                        <button class="button button-dark form-submit" type="submit">Join the team <span
+                                aria-hidden="true">→</span></button>
+                        <p class="form-status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer"><a class="brand brand-footer" href="/"><span
+                class="brand-mark">P</span><span>PetShelterHub<small>Pet care, together</small></span></a>
+        <p>Made with care for every creature, great and small.</p><a href="mailto:hello@PetShelterHub.org">Say hello
+            ↗</a>
+    </footer>
+</body>
+
+</html>

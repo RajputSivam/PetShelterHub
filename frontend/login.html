@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f5ef">
+    <title>Sign in | PetShelterHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/main.js" defer></script>
+</head>
+
+<body class="auth-page">
+    <header class="site-header">
+        <a class="brand" href="/"><span class="brand-mark">P</span><span>PetShelterHub<small>Pet care,
+                    together</small></span></a>
+        <nav class="main-nav"><a href="/#pets">Meet the pets</a><a href="/">Back home</a></nav>
+    </header>
+    <main class="auth-layout">
+        <div class="auth-art" role="img" aria-label="A rescued dog resting in the grass">
+            <div class="auth-art-copy">
+                <p class="eyebrow">A PLACE FOR ANIMAL PEOPLE</p>
+                <h1>Good things<br>happen <em>together.</em></h1>
+                <p>Your PetShelterHub account keeps your next steps close.</p>
+            </div>
+            <span class="auth-art-credit">EVERY FRIEND DESERVES A SAFE PLACE</span>
+        </div>
+        <section class="auth-form-wrap">
+            <div class="auth-form-inner">
+                <p class="eyebrow">WELCOME TO THE FAMILY</p>
+                <h2 id="auth-title">Welcome back.</h2>
+                <p class="auth-subtitle" id="auth-subtitle">Sign in to your PetShelterHub account.</p>
+                <div class="auth-switch" role="tablist" aria-label="Account access">
+                    <button class="auth-tab is-active" type="button" data-auth-tab="login" role="tab"
+                        aria-selected="true">Sign in</button>
+                    <button class="auth-tab" type="button" data-auth-tab="register" role="tab"
+                        aria-selected="false">Create account</button>
+                </div>
+                <form id="login-form" class="auth-form" data-endpoint="/auth/login">
+                    <label for="login-email">Email</label><input id="login-email" name="email" type="email"
+                        autocomplete="email" required>
+                    <label for="login-password">Password</label><input id="login-password" name="password"
+                        type="password" autocomplete="current-password" required>
+                    <button class="button button-dark form-submit" type="submit">Sign in <span
+                            aria-hidden="true">→</span></button>
+                    <p class="form-status" aria-live="polite"></p>
+                </form>
+                <form id="register-form" class="auth-form" data-endpoint="/auth/register" hidden>
+                    <label for="register-name">Your name</label><input id="register-name" name="name"
+                        autocomplete="name" required>
+                    <label for="register-email">Email</label><input id="register-email" name="email" type="email"
+                        autocomplete="email" required>
+                    <label for="register-password">Password <span class="optional">At least 8
+                            characters</span></label><input id="register-password" name="password" type="password"
+                        autocomplete="new-password" minlength="8" required>
+                    <button class="button button-dark form-submit" type="submit">Create account <span
+                            aria-hidden="true">→</span></button>
+                    <p class="form-status" aria-live="polite"></p>
+                </form>
+                <a class="auth-back" href="/">← Back to PetShelterHub</a>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer auth-footer">
+        <p>Made with care for every creature, great and small.</p><a href="mailto:hello@PetShelterHub.org">Say hello
+            ↗</a>
+    </footer>
+</body>
+
+</html>
