@@ -1,4 +1,7 @@
-const API_BASE = window.location.port && window.location.port !== '3000'
+const isLocalDevelopment = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+    && window.location.port
+    && window.location.port !== '3000';
+const API_BASE = isLocalDevelopment
     ? `http://${window.location.hostname || 'localhost'}:3000/api`
     : '/api';
 

@@ -12,7 +12,7 @@ const volunteerRoutes = require('./routes/volunteers');
 const pool = require('./db');
 
 const app = express();
-const port = Number(process.env.PORT) || 3000;
+const PORT = process.env.PORT || 8080;
 const allowedOrigins = process.env.FRONTEND_ORIGIN
     ? process.env.FRONTEND_ORIGIN.split(',').map((origin) => origin.trim())
     : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'];
@@ -74,6 +74,9 @@ app.use((error, req, res, next) => {
     res.status(500).json({ message });
 });
 
-app.listen(port, () => {
-    console.log(`PetShelterHub is running at http://localhost:${port}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+    pool.query('SELECT 1')
+        .then(() => console.log('Database connection successful.'))
+        .catch((error) => console.error('Database connection failed:', error.message));
 });

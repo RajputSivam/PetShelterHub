@@ -15,7 +15,7 @@ PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/Ja
 	mysql -u root -p < backend/schema.sql
 	```
 
-2. Create `backend/.env` from `backend/.env.example`, then set `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` for your MySQL installation. Set `SESSION_SECRET` to a long, random value before deployment.
+2. Create `backend/.env` from `backend/.env.example`, then set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` for your MySQL installation. Set `DB_SSL=true` if your database provider requires TLS, and set `SESSION_SECRET` to a long, random value before deployment.
 
 3. Add your Razorpay test credentials to `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `backend/.env`. Never commit those credentials. Razorpay test mode simulates payments and does not charge or settle real money; use live credentials only when ready to accept real donations.
 
@@ -30,6 +30,8 @@ PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/Ja
 	```
 
 4. Open [http://localhost:3000](http://localhost:3000). Express serves the frontend and API from the same origin.
+
+For Railway, configure the database and session values as service variables. Railway supplies `PORT` automatically; the server binds to `0.0.0.0` and serves both the frontend and API from the same origin.
 
 For a separately hosted frontend, set `FRONTEND_ORIGIN` in `backend/.env` to its exact origin and serve the frontend on that origin. The frontend defaults to `http://localhost:3000/api` when opened on another local development port.
 
