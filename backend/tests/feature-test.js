@@ -146,13 +146,34 @@ async function main() {
             await assertSaved('SELECT id FROM adoptions WHERE email = ? AND applicant_name = ?', [testEmail, testName], 'adoption request');
         });
 
-        await runTest('Save donation in MySQL', async () => {
+        await runTest('Reject unverified legacy donation inserts', async () => {
             const result = await request('/donations', {
                 method: 'POST',
                 body: { name: testName, email: testEmail, amount: 1, message: 'Automated feature test' }
             });
+            expectStatus(result, 410);
+            assert(result.body?.message, 'expected the legacy donation route to explain checkout is required');
+            const [rows] = await pool.execute('SELECT id FROM donations WHERE email = ? AND donor_name = ?', [testEmail, testName]);
+            assert(rows.length === 0, 'legacy donation route inserted a donation without payment');
+        });
+
+        await runTest('Create a Razorpay order or report missing test keys', async () => {
+            const result = await request('/payments/create-order', {
+                method: 'POST',
+                body: { name: testName, email: testEmail, amount: 1, message: 'Automated feature test' }
+            });
+            if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+                expectStatus(result, 503);
+                assert(result.body?.message?.includes('Razorpay is not configured'), 'expected a clear missing-key message');
+                return;
+            }
             expectStatus(result, 201);
-            await assertSaved('SELECT id FROM donations WHERE email = ? AND donor_name = ?', [testEmail, testName], 'donation');
+            assert(result.body?.order_id && result.body.amount_paise === 100, 'expected a Razorpay order in paise');
+            const [rows] = await pool.execute(
+                "SELECT id FROM donations WHERE email = ? AND razorpay_order_id = ? AND payment_status = 'pending'",
+                [testEmail, result.body.order_id]
+            );
+            assert(rows.length > 0, 'pending donation order was not saved');
         });
 
         await runTest('Save volunteer sign-up in MySQL', async () => {
@@ -165,11 +186,14 @@ async function main() {
         });
 
         await runTest('Guest routes do not require login', async () => {
-            for (const route of ['/adoptions', '/donations', '/volunteers']) {
+            for (const route of ['/adoptions', '/volunteers']) {
                 const result = await request(route, { method: 'POST', body: {} });
                 expectStatus(result, 400);
                 assert(result.body?.message, `${route} did not return a JSON validation message`);
             }
+            const payment = await request('/payments/create-order', { method: 'POST', body: {} });
+            expectStatus(payment, 400);
+            assert(payment.body?.message, 'payment route did not return a JSON validation message');
             const current = await request('/auth/me');
             expectStatus(current, 200);
             assert(current.body?.user === null, 'expected an anonymous session');

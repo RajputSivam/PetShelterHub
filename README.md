@@ -1,6 +1,6 @@
 # PetShelterHub
 
-PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/JavaScript frontend and an Express/MySQL backend. Visitors can browse available pets, request an adoption, record a donation pledge, and apply to volunteer. Accounts use bcrypt-hashed passwords and a session cookie.
+PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/JavaScript frontend and an Express/MySQL backend. Visitors can browse available pets, request an adoption, donate through Razorpay Checkout, and apply to volunteer. Accounts use bcrypt-hashed passwords and a session cookie.
 
 ## Requirements
 
@@ -17,7 +17,11 @@ PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/Ja
 
 2. Create `backend/.env` from `backend/.env.example`, then set `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` for your MySQL installation. Set `SESSION_SECRET` to a long, random value before deployment.
 
-3. Install dependencies and start the app:
+3. Add your Razorpay test credentials to `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `backend/.env`. Never commit those credentials. Razorpay test mode simulates payments and does not charge or settle real money; use live credentials only when ready to accept real donations.
+
+4. For an existing database, apply `backend/migrations/add_payment_columns.sql` once to add the Razorpay order, payment, and status columns. Fresh databases get them from `backend/schema.sql`.
+
+5. Install dependencies and start the app:
 
 	```powershell
 	cd backend
@@ -37,7 +41,7 @@ For a separately hosted frontend, set `FRONTEND_ORIGIN` in `backend/.env` to its
 - `POST /api/auth/login` with `{ "email", "password" }` starts a session.
 - `GET /api/auth/me` returns the current session user; `POST /api/auth/logout` ends the session.
 - `POST /api/adoptions` accepts `{ "petId", "name", "email", "phone", "message" }`.
-- `POST /api/donations` accepts `{ "name", "email", "amount", "message" }`.
+- `POST /api/payments/create-order` creates a pending INR donation order from `{ "name", "email", "amount", "message" }`.
+- `POST /api/payments/verify` verifies the Razorpay signature and marks a matching pending donation paid.
+- `POST /api/donations` is retired and returns `410`; donations must use Razorpay checkout.
 - `POST /api/volunteers` accepts `{ "name", "email", "phone", "availability", "interests" }`.
-
-Donation submissions record pledges only. No payment details are collected and payment processing is not configured.

@@ -43,6 +43,9 @@ CREATE TABLE IF NOT EXISTS donations (
   email VARCHAR(255) NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,
   message TEXT NOT NULL,
+  razorpay_order_id VARCHAR(100) NULL,
+  razorpay_payment_id VARCHAR(100) NULL,
+  payment_status VARCHAR(20) NOT NULL DEFAULT 'pending',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_donations_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 );

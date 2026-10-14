@@ -57,6 +57,93 @@ function bindSubmissionForms() {
     });
 }
 
+function bindDonationCheckout() {
+    const form = document.querySelector('#donation-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = form.querySelector('[type="submit"]');
+        const values = Object.fromEntries(new FormData(form).entries());
+        button.disabled = true;
+        let checkoutOpened = false;
+        setFormStatus(form, 'Creating secure checkout...');
+
+        try {
+            if (typeof window.Razorpay !== 'function') {
+                throw new Error('Razorpay checkout could not be loaded. Please refresh and try again.');
+            }
+
+            const order = await apiRequest('/payments/create-order', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: values.name,
+                    email: values.email,
+                    amount: Number(values.amount),
+                    message: values.message || ''
+                })
+            });
+
+            let paymentHandled = false;
+            let checkoutOpened = false;
+            const checkout = new window.Razorpay({
+                key: order.key_id,
+                amount: order.amount_paise,
+                currency: 'INR',
+                order_id: order.order_id,
+                name: 'PetShelterHub',
+                description: 'Donation',
+                handler: async (payment) => {
+                    paymentHandled = true;
+                    setFormStatus(form, 'Verifying payment...');
+                    try {
+                        const verification = await apiRequest('/payments/verify', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                razorpay_order_id: payment.razorpay_order_id,
+                                razorpay_payment_id: payment.razorpay_payment_id,
+                                razorpay_signature: payment.razorpay_signature
+                            })
+                        });
+                        if (!verification.success) {
+                            throw new Error(verification.message || 'Payment verification failed.');
+                        }
+                        setFormStatus(form, verification.message || 'Thank you, your donation was received.');
+                        form.reset();
+                    } catch (error) {
+                        setFormStatus(form, error.message, true);
+                    } finally {
+                        button.disabled = false;
+                    }
+                },
+                prefill: { name: values.name, email: values.email },
+                theme: { color: '#244a3c' },
+                modal: {
+                    ondismiss: () => {
+                        if (!paymentHandled) setFormStatus(form, 'Payment cancelled');
+                        button.disabled = false;
+                    }
+                }
+            });
+
+            checkout.on('payment.failed', (event) => {
+                paymentHandled = true;
+                setFormStatus(form, event.error?.description || 'Payment failed. Please try again.', true);
+                button.disabled = false;
+            });
+
+            setFormStatus(form, 'Complete payment in Razorpay to finish your donation.');
+            checkoutOpened = true;
+            checkout.open();
+        } catch (error) {
+            checkoutOpened = false;
+            setFormStatus(form, error.message, true);
+        } finally {
+            if (!checkoutOpened) button.disabled = false;
+        }
+    });
+}
+
 async function loadPets() {
     const petList = document.querySelector('#pet-list');
     if (!petList) return;
@@ -153,6 +240,7 @@ async function handleAuthSuccess(result, form) {
 
 document.addEventListener('DOMContentLoaded', () => {
     bindSubmissionForms();
+    bindDonationCheckout();
     loadPets();
     loadCurrentUser();
     bindAuthTabs();

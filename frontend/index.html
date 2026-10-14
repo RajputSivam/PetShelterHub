@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#f6f5ef">
     <title>PetShelterHub | A home for every heart</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="js/main.js" defer></script>
 </head>
 
@@ -91,7 +92,7 @@
                         <p class="form-status" aria-live="polite"></p>
                     </form>
 
-                    <form class="form-panel form-panel-accent" id="donation-form" data-endpoint="/donations">
+                    <form class="form-panel form-panel-accent" id="donation-form">
                         <div class="form-heading"><span class="form-number">02</span>
                             <div>
                                 <h3>Make a donation</h3>
@@ -102,14 +103,14 @@
                             autocomplete="name" required>
                         <label for="donation-email">Email</label><input id="donation-email" name="email" type="email"
                             autocomplete="email" required>
-                        <label for="donation-amount">Donation amount</label>
-                        <div class="amount-field"><span aria-hidden="true">$</span><input id="donation-amount"
+                        <label for="donation-amount">Donation amount (INR)</label>
+                        <div class="amount-field"><span aria-hidden="true">&#8377;</span><input id="donation-amount"
                                 name="amount" type="number" min="1" step="0.01" placeholder="25" required></div>
                         <label for="donation-message">A note for the team <span class="optional">Optional</span></label>
                         <textarea id="donation-message" name="message" rows="3"
                             placeholder="Leave a kind note"></textarea>
-                        <p class="form-footnote">This records a donation pledge; online payment is not enabled.</p>
-                        <button class="button button-coral form-submit" type="submit">Pledge support <span
+                        <p class="form-footnote">Checkout is completed securely through Razorpay.</p>
+                        <button class="button button-coral form-submit" type="submit">Continue to checkout <span
                                 aria-hidden="true">→</span></button>
                         <p class="form-status" aria-live="polite"></p>
                     </form>

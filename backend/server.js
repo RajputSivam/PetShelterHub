@@ -7,6 +7,7 @@ const session = require('express-session');
 const authRoutes = require('./routes/auth');
 const adoptionRoutes = require('./routes/adoption');
 const donationRoutes = require('./routes/donations');
+const paymentRoutes = require('./routes/payments');
 const volunteerRoutes = require('./routes/volunteers');
 const pool = require('./db');
 
@@ -59,6 +60,7 @@ app.get('/api/pets', async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/adoptions', adoptionRoutes);
 app.use('/api/donations', donationRoutes);
+app.use('/api/payments', paymentRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 
 app.use('/api', (req, res) => res.status(404).json({ message: 'API endpoint not found.' }));
