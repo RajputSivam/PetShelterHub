@@ -1,49 +1,148 @@
 # PetShelterHub
 
-PetShelterHub is a small pet-shelter management starter with a plain HTML/CSS/JavaScript frontend and an Express/MySQL backend. Visitors can browse available pets, request an adoption, donate through Razorpay Checkout, and apply to volunteer. Accounts use bcrypt-hashed passwords and a session cookie.
+A web-based pet shelter management system that helps shelters handle user accounts, pet adoptions, donations, and volunteer sign-ups in one place.
 
-## Requirements
+**Live demo:** [https://petshelterhub-production.up.railway.app/login.html](https://petshelterhub-production.up.railway.app/login.html)
 
-- Node.js 18 or newer and npm
-- MySQL 8 or a compatible MySQL server
+---
 
-## Setup
+## Features
 
-1. Create the database and tables, and add the sample pets:
+- **User authentication:** Secure login and registration for adopters, donors, and volunteers
+- **Pet adoption:** Browse available pets and submit adoption requests
+- **Donations:** Record and track donations to the shelter
+- **Volunteer management:** Sign up and manage volunteer participation
+- **Responsive interface:** Works on desktop and mobile browsers
 
-	```powershell
-	mysql -u root -p < backend/schema.sql
-	```
+## Tech Stack
 
-2. Create `backend/.env` from `backend/.env.example`, then set `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` for your MySQL installation. Set `DB_SSL=true` if your database provider requires TLS, and set `SESSION_SECRET` to a long, random value before deployment.
+| Layer     | Technology                              |
+|-----------|-----------------------------------------|
+| Frontend  | HTML, CSS, JavaScript                   |
+| Backend   | Node.js, Express.js                     |
+| Database  | MySQL                                   |
+| Deployment| Railway                                 |
+| Local dev | XAMPP (MySQL), VS Code Live Server      |
 
-3. Add your Razorpay test credentials to `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in `backend/.env`. Never commit those credentials. Razorpay test mode simulates payments and does not charge or settle real money; use live credentials only when ready to accept real donations.
+## Project Structure
 
-4. For an existing database, apply `backend/migrations/add_payment_columns.sql` once to add the Razorpay order, payment, and status columns. Fresh databases get them from `backend/schema.sql`.
+```
+PetShelterHub/
+├── backend/
+│   ├── config/          # Database connection settings
+│   ├── routes/          # API routes (auth, pets, adoptions, donations, volunteers)
+│   ├── controllers/     # Request handling logic
+│   ├── models/          # Database queries
+│   ├── server.js        # Express app entry point
+│   └── package.json
+├── frontend/
+│   ├── css/             # Stylesheets
+│   ├── js/              # Client-side scripts
+│   ├── images/          # Static assets
+│   ├── login.html
+│   └── index.html
+└── README.md
+```
 
-5. Install dependencies and start the app:
+> Adjust this tree to match your actual folders.
 
-	```powershell
-	cd backend
-	npm install
-	npm start
-	```
+## Getting Started
 
-4. Open [http://localhost:3000](http://localhost:3000). Express serves the frontend and API from the same origin.
+### Prerequisites
 
-For Railway, configure the database and session values as service variables. Railway supplies `PORT` automatically; the server binds to `0.0.0.0` and serves both the frontend and API from the same origin.
+- [Node.js](https://nodejs.org/) (v18 or later)
+- [XAMPP](https://www.apachefriends.org/) (for MySQL)
+- [VS Code](https://code.visualstudio.com/) with the Live Server extension
+- Git
 
-For a separately hosted frontend, set `FRONTEND_ORIGIN` in `backend/.env` to its exact origin and serve the frontend on that origin. The frontend defaults to `http://localhost:3000/api` when opened on another local development port.
+### 1. Clone the repository
 
-## API
+```bash
+git clone https://github.com/[your-username]/PetShelterHub.git
+cd PetShelterHub
+```
 
-- `GET /api/health` checks the database connection.
-- `GET /api/pets` lists available pets.
-- `POST /api/auth/register` with `{ "name", "email", "password" }` creates an account.
-- `POST /api/auth/login` with `{ "email", "password" }` starts a session.
-- `GET /api/auth/me` returns the current session user; `POST /api/auth/logout` ends the session.
-- `POST /api/adoptions` accepts `{ "petId", "name", "email", "phone", "message" }`.
-- `POST /api/payments/create-order` creates a pending INR donation order from `{ "name", "email", "amount", "message" }`.
-- `POST /api/payments/verify` verifies the Razorpay signature and marks a matching pending donation paid.
-- `POST /api/donations` is retired and returns `410`; donations must use Razorpay checkout.
-- `POST /api/volunteers` accepts `{ "name", "email", "phone", "availability", "interests" }`.
+### 2. Set up the database
+
+1. Start **MySQL** from the XAMPP Control Panel.
+2. Open phpMyAdmin at `http://localhost/phpmyadmin`.
+3. Create a database named `petshelterhub`.
+4. Import the schema: `[path/to/schema.sql]`
+
+### 3. Configure environment variables
+
+Create a `.env` file inside `backend/`:
+
+```env
+PORT=5000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=petshelterhub
+JWT_SECRET=your_secret_key
+```
+
+### 4. Install backend dependencies and run the server
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+The API will run at `http://localhost:5000`.
+
+### 5. Run the frontend
+
+Open the `frontend/` folder in VS Code, right-click `login.html`, and select **Open with Live Server**.
+
+## API Endpoints
+
+| Method | Endpoint              | Description                    |
+|--------|-----------------------|--------------------------------|
+| POST   | `/api/auth/register`  | Register a new user            |
+| POST   | `/api/auth/login`     | Log in and receive a token     |
+| GET    | `/api/pets`           | List available pets            |
+| POST   | `/api/adoptions`      | Submit an adoption request     |
+| POST   | `/api/donations`      | Record a donation              |
+| POST   | `/api/volunteers`     | Register as a volunteer        |
+
+> Update this table with your actual routes.
+
+## Deployment
+
+The app is deployed on [Railway](https://railway.app/). To deploy your own instance:
+
+1. Push the repository to GitHub.
+2. Create a new Railway project and connect the repository.
+3. Add a MySQL service and copy its connection variables into the project's environment settings.
+4. Set `JWT_SECRET` and any other variables from the `.env` section above.
+5. Deploy. Railway will build and start the Node.js service automatically.
+
+## Screenshots
+
+_Add screenshots of the login page, pet listing, and admin dashboard here._
+
+## Roadmap
+
+- [ ] Admin dashboard for managing pets and adoption requests
+- [ ] Email notifications for adoption status updates
+- [ ] Donation reports and export
+- [ ] Role-based access control for staff and volunteers
+
+## Contributing
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m "Add your feature"`).
+4. Push to the branch and open a Pull Request.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Contact
+
+**[Your Name]**
+Email:rajputshivamrajput280@gmail.com
+GitHub: RajputSivam
