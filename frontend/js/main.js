@@ -1,9 +1,4 @@
-const isLocalDevelopment = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-    && window.location.port
-    && window.location.port !== '3000';
-const API_BASE = isLocalDevelopment
-    ? `http://${window.location.hostname || 'localhost'}:3000/api`
-    : '/api';
+const API_BASE = '/api';
 
 async function apiRequest(endpoint, options = {}) {
     const response = await fetch(`${API_BASE}${endpoint}`, {
