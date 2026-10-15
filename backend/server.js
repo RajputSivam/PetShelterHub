@@ -70,7 +70,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/volunteers', volunteerRoutes);
 
 app.use('/api', (req, res) => res.status(404).json({ message: 'API endpoint not found.' }));
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use((error, req, res, next) => {
     console.error(error.code || 'UNKNOWN_ERROR', error.message);
     console.error(error.stack || error);
