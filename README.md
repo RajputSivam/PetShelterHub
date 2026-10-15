@@ -143,6 +143,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-**[Your Name]**
+Shivam Rajput
 Email:rajputshivamrajput280@gmail.com
 GitHub: RajputSivam
