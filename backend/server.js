@@ -13,6 +13,11 @@ const pool = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Railway terminates TLS at a proxy, which secure session cookies need to trust.
+app.set('trust proxy', 1);
+
 const allowedOrigins = process.env.FRONTEND_ORIGIN
     ? process.env.FRONTEND_ORIGIN.split(',').map((origin) => origin.trim())
     : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'];
@@ -22,6 +27,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
+
 app.use(session({
     name: 'PetShelterHub.sid',
     secret: process.env.SESSION_SECRET || 'replace-this-development-secret',
@@ -30,12 +36,12 @@ app.use(session({
     cookie: {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
+        secure: isProduction,
         maxAge: 1000 * 60 * 60 * 24
     }
 }));
 
-app.get('/api/health', async (req, res, next) => {
+app.get('/api/health', async (req, res) => {
     try {
         await pool.query('SELECT 1');
         res.json({ status: 'ok' });
@@ -45,7 +51,7 @@ app.get('/api/health', async (req, res, next) => {
     }
 });
 
-app.get('/api/pets', async (req, res, next) => {
+app.get('/api/pets', async (req, res) => {
     try {
         const [pets] = await pool.execute(
             "SELECT id, name, species, breed, age, sex, description, image_url FROM pets WHERE status = 'available' ORDER BY created_at DESC"
@@ -69,7 +75,7 @@ app.use((error, req, res, next) => {
     console.error(error.code || 'UNKNOWN_ERROR', error.message);
     console.error(error.stack || error);
     const message = error.code === 'ER_ACCESS_DENIED_ERROR'
-        ? 'Database authentication failed. Check DB_HOST, DB_USER, DB_PASSWORD, and DB_NAME in backend/.env.'
+        ? 'Database authentication failed. Check DB_HOST, DB_USER, DB_PASSWORD, and DB_NAME.'
         : error.message || 'Something went wrong.';
     res.status(500).json({ message });
 });
